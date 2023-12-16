@@ -27,12 +27,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Test {
-        /// lists test values
-        #[arg(short, long)]
-        list: bool,
-    },
-
     Exec {
         #[arg(short, long)]
         show_header: bool,
@@ -71,14 +65,6 @@ async fn main() {
             let finish_time = Instant::now();
             display.show(response, *should_show_header, finish_time.duration_since(start_time), client.get_method().as_str().to_owned()).await;
         } 
-
-        Some(Commands::Test { list }) => {
-            if *list {
-                println!("Test Command Work")
-            } else {
-                println!("Not printing testing lists...");
-            }
-        }
         None => {}
     }
 

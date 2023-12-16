@@ -1,6 +1,6 @@
 use anyhow::Error;
 
-use crate::pkg::http_parser::model::HttpFileParsed;
+use crate::pkg::http_parser::model::HttpModel;
 
 use crate::pkg::client::adapted_client::AdaptedClient;
 
@@ -13,7 +13,7 @@ impl AdaptedClientBuilder {
         }
     }
 
-    pub fn build(&self, cfg: HttpFileParsed) -> Result<AdaptedClient , Error>{
+    pub fn build(&self, cfg: HttpModel) -> Result<AdaptedClient , Error>{
       let url = cfg.url.clone();
       let method = cfg.get_method();
       let body = cfg.body; 

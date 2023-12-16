@@ -7,5 +7,5 @@ Info No need postman for now
   "ag": 40,
   "motto": "Fortune favors the bold.",
   "is_need_postman": false,
-  "simple": "Very simple that i can test my API in the CLI with this http parser"
+  "simple": "Very simple that i can test my API in the CLI with this http {{$uuid}}"
 }

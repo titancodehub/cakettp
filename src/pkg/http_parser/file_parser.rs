@@ -3,7 +3,8 @@ use anyhow::Error;
 use regex::Regex;
 use serde_json::Value;
 
-use super::model::HttpFileParsed;
+use super::model::HttpModel;
+use super::variable_parser::replace_placeholder;
 
 const METHOD_REGEX: &str = r"^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)\s+";
 
@@ -20,7 +21,7 @@ impl FileParser {
   
   }
 
-  pub fn parse(&self) -> Result<HttpFileParsed, Error> {
+  pub fn parse(&self) -> Result<HttpModel, Error> {
     // follow https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
     let mut request_lines: Vec<String> =[].to_vec();
     let mut header_lines: Vec<String> = [].to_vec();
@@ -29,7 +30,8 @@ impl FileParser {
     // read raw text and split into lines
     let raw_content: String = fs::read_to_string("src/pkg/http_parser/example.http")
     .expect("Something went wrong reading the file");
-    let mut content: Vec<String> = raw_content.lines().into_iter().map(|line| line.to_string()).collect();
+    // parse content and replace placeholder
+    let mut content: Vec<String> = replace_placeholder(raw_content).lines().into_iter().map(|line| line.to_string()).collect();
     let mut state: ParserState = ParserState::RequestLine;
     let mut current_line: String;
     while !content.is_empty() {
@@ -91,7 +93,7 @@ impl FileParser {
       binding = serde_json::from_str(body_lines.as_str())?;
     }
 
-    return Ok(HttpFileParsed {
+    return Ok(HttpModel {
       url: find_url.trim().to_ascii_lowercase().to_string(),
       method: method.trim().to_string(),
       body: if binding == Value::Null { None } else { Some(binding) },
