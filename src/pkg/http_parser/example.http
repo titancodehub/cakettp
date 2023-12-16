@@ -1,0 +1,11 @@
+POST https://httpbin.org/post
+Content-Type application/json
+Info No need postman for now
+
+{
+  "name": "John Wick",
+  "ag": 40,
+  "motto": "Fortune favors the bold.",
+  "is_need_postman": false,
+  "simple": "Very simple that i can test my API in the CLI with this http parser"
+}
