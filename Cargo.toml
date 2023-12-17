@@ -8,9 +8,11 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.75"
 chrono = "0.4.31"
-clap = { version = "4.4.11", features = ["derive"] }
+clap = { version = "4.4.11", features = ["derive", "unstable-styles"] }
 colored_json = "4.1.0"
 console = "0.15.7"
+crossterm = "0.27.0"
+dialoguer = { version = "0.11.0", features = ["fuzzy-select"] }
 minus = { version = "5.5.1", features = ["static_output"] }
 rand = "0.8.5"
 regex = "1.10.2"

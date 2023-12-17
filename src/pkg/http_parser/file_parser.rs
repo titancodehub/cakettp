@@ -20,14 +20,14 @@ impl FileParser {
   
   }
 
-  pub fn parse(&self) -> Result<HttpModel, Error> {
+  pub fn parse(&self, file_path: String) -> Result<HttpModel, Error> {
     // follow https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
     let mut request_lines: Vec<String> =[].to_vec();
     let mut header_lines: Vec<String> = [].to_vec();
     let mut body_lines: String = "".to_string();
 
     // read raw text and split into lines
-    let raw_content: String = fs::read_to_string("src/pkg/http_parser/example.http")
+    let raw_content: String = fs::read_to_string(file_path)
     .expect("Something went wrong reading the file");
     // sanitize from comment
     let mut cleaned_content = replace_placeholder(raw_content);
