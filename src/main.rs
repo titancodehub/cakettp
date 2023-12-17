@@ -4,7 +4,7 @@ use std::time::Instant;
 use clap::{Parser, Subcommand};
 mod pkg;
 use pkg::display::console::ConsoleDisplay;
-use pkg::http_parser::HttpParser;
+use pkg::http_parser::http_parser::HttpParser;
 use pkg::client::adapted_client_builder::AdaptedClientBuilder;
 
 #[derive(Parser)]

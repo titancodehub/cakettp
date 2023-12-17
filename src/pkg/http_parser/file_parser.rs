@@ -4,10 +4,9 @@ use regex::Regex;
 use serde_json::Value;
 
 use super::model::HttpModel;
-use super::variable_parser::replace_placeholder;
-
-const METHOD_REGEX: &str = r"^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|LOCK|UNLOCK|PROPFIND|PROPPATCH|COPY|MOVE|MKCOL|MKCALENDAR|ACL|SEARCH)\s+";
-
+use super::utils::{replace_placeholder, clean_comment};
+use super::regex::METHOD_REGEX;
+#[derive(Debug)]
 enum ParserState {
   RequestLine,
   HeaderLine,
@@ -30,8 +29,11 @@ impl FileParser {
     // read raw text and split into lines
     let raw_content: String = fs::read_to_string("src/pkg/http_parser/example.http")
     .expect("Something went wrong reading the file");
-    // parse content and replace placeholder
-    let mut content: Vec<String> = replace_placeholder(raw_content).lines().into_iter().map(|line| line.to_string()).collect();
+    // sanitize from comment
+    let mut cleaned_content = replace_placeholder(raw_content);
+    cleaned_content = clean_comment(cleaned_content);
+    // replace variable placeholder
+    let mut content: Vec<String> = replace_placeholder(cleaned_content).lines().into_iter().map(|line| line.to_string()).collect();
     let mut state: ParserState = ParserState::RequestLine;
     let mut current_line: String;
     while !content.is_empty() {
@@ -40,7 +42,7 @@ impl FileParser {
       let mut next_line="".to_string();
       if content.len() > 0 {
         next_line = content[0].clone();
-      } 
+      }
         match state {
           ParserState::RequestLine  => {
             request_lines.push(current_line);
