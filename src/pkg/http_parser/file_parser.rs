@@ -81,10 +81,14 @@ impl FileParser {
 
     // Extract method and url
     let re = Regex::new(METHOD_REGEX)?;
-    let upper_case_line = request_lines[0].to_ascii_uppercase();
+    let line = request_lines.get(0);
+    if line.is_none() {
+      return Err(Error::msg("problem while reading .http file. please check that you followed the correct syntax"));
+    }
+    let upper_case_line = line.unwrap().to_ascii_uppercase();
     let find_method = re.find(upper_case_line.as_str());
     if find_method.is_none() {
-      return Err(Error::msg("invalid method"));
+      return Err(Error::msg("problem while reading request method. please check that you followed the correct syntax"));
     }
     let method = find_method.unwrap().as_str();
     let find_url = upper_case_line.replace(method, "");
